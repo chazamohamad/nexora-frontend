@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* ========================================
+   TEAMFLOW DESIGN SYSTEM
+======================================== */
+
+@theme {
+  /* FONT */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* BRAND COLORS */
+  --color-primary: #0b515c;
+  --color-secondary: #23877f;
+  --color-accent: #e6a23a;
+  --color-primary-action: #08716d;
+  --color-brand-teal: #29aaa5;
+  --color-primary-dark: #073d49;
+
+  /* BACKGROUNDS */
+  --color-background: #f0f6f6;
+  --color-surface: #ffffff;
+  --color-surface-alt: #e7f4f3;
+  --color-soft-mint: #e2f3f1;
+  --color-muted-surface: #e9f0ee;
+
+  /* TEXT COLORS */
+  --color-text-primary: #172a33;
+  --color-text-secondary: #657780;
+  --color-text-muted: #87969d;
+  --color-text-inverse: #ffffff;
+
+  /* BORDERS */
+  --color-border: #d8e5e7;
+  --color-divider: #e5ecee;
+
+  /* SIDEBAR */
+  --color-sidebar-dark: #073d49;
+  --color-sidebar-primary: #0b515c;
+  --color-sidebar-active: #23877f;
+  --color-sidebar-hover: #17636b;
+
+  /* BUTTONS */
+  --color-button-primary: #08716d;
+  --color-button-hover: #075d5b;
+  --color-button-secondary: #e5f2f0;
+  --color-button-danger: #d94b4b;
+
+  /* STATUS COLORS */
+  --color-success: #1f8a70;
+  --color-success-bg: #e2f4e8;
+
+  --color-warning: #d9942b;
+  --color-warning-bg: #fff1d9;
+
+  --color-error: #d94b4b;
+  --color-error-bg: #fde8e8;
+
+  --color-info: #3f7fa1;
+  --color-info-bg: #e4f2fa;
+
+  /* TASK STATUS */
+  --color-todo: #78868e;
+  --color-todo-bg: #e9eef1;
+
+  --color-in-progress: #318bd4;
+  --color-in-progress-bg: #ddf0ff;
+
+  --color-in-review: #7652d5;
+  --color-in-review-bg: #ede8fe;
+
+  --color-done: #238a4d;
+  --color-done-bg: #e0f5e2;
+
+  /* PRIORITY */
+  --color-priority-high: #d94b4b;
+  --color-priority-high-bg: #fde8e8;
+
+  --color-priority-medium: #d58d27;
+  --color-priority-medium-bg: #fff0dd;
+
+  --color-priority-low: #238a56;
+  --color-priority-low-bg: #e3f5e8;
+
+  /* AVATARS */
+  --color-avatar-purple: #6743d2;
+  --color-avatar-teal: #168f8a;
+  --color-avatar-blue: #258cc5;
+  --color-avatar-pink: #c16fb7;
+  --color-avatar-amber: #d69a35;
+  --color-avatar-navy: #0b515c;
+}
