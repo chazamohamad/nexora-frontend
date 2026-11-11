@@ -3,8 +3,13 @@ import { getAuthData } from "../../utils/session-storage";
 
 type ActivePanel = "notifications" | "profile" | null;
 
-function Header() {
+type HeaderProps = {
+  onMenuClick: () => void;
+};
+
+function Header({ onMenuClick }: HeaderProps) {
   const [activePanel, setActivePanel] = useState<ActivePanel>(null);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   const authData = getAuthData();
 
@@ -26,13 +31,50 @@ function Header() {
 
   // Toggle Header Panels
   const togglePanel = (panel: ActivePanel) => {
+    setIsMobileSearchOpen(false);
+
     setActivePanel((current) => (current === panel ? null : panel));
   };
 
+  // Toggle Mobile Search
+  const toggleMobileSearch = () => {
+    setActivePanel(null);
+    setIsMobileSearchOpen((current) => !current);
+  };
+
   return (
-    <header className="sticky top-0 z-30 flex h-[72px] shrink-0 items-center justify-between border-b border-[#DCE7E8] bg-surface/95 px-6 backdrop-blur-md lg:px-9">
-      {/* Search */}
-      <div className="flex h-[42px] w-full max-w-[650px] items-center gap-3 rounded-full border border-[#D2DFE1] bg-white px-4 shadow-sm transition focus-within:border-primary-action focus-within:ring-2 focus-within:ring-primary/10">
+    <header className="sticky top-0 z-30 flex h-[68px] shrink-0 items-center justify-between gap-3 border-b border-[#DCE7E8] bg-surface/95 px-3 backdrop-blur-md sm:px-5 lg:px-8">
+      {/* Mobile Menu + Brand */}
+      <div className="flex min-w-0 items-center gap-3 md:hidden">
+        <button
+          type="button"
+          onClick={() => {
+            setActivePanel(null);
+            setIsMobileSearchOpen(false);
+            onMenuClick();
+          }}
+          aria-label="Open navigation menu"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-primary transition hover:bg-soft-mint"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            className="h-6 w-6"
+          >
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <span className="truncate text-lg font-bold text-primary">
+          NEXOR<span className="text-accent">A</span>
+        </span>
+      </div>
+
+      {/* Desktop Search */}
+      <div className="hidden h-[42px] w-full max-w-[650px] flex-1 items-center gap-3 rounded-full border border-[#D2DFE1] bg-white px-4 shadow-sm transition focus-within:border-primary-action focus-within:ring-2 focus-within:ring-primary/10 md:flex">
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -53,18 +95,39 @@ function Header() {
       </div>
 
       {/* Header Actions */}
-      <div className="ml-6 flex shrink-0 items-center gap-5">
-        {/* =================================
-            NOTIFICATIONS
-        ================================== */}
+      <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-4">
+        {/* Mobile Search Button */}
+        <button
+          type="button"
+          onClick={toggleMobileSearch}
+          aria-label="Search"
+          aria-expanded={isMobileSearchOpen}
+          className={`flex h-10 w-10 items-center justify-center rounded-xl transition md:hidden ${
+            isMobileSearchOpen
+              ? "bg-soft-mint text-primary"
+              : "text-text-secondary hover:bg-soft-mint hover:text-primary"
+          }`}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            className="h-[22px] w-[22px]"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m16 16 4 4" />
+          </svg>
+        </button>
 
+        {/* Notifications */}
         <div className="relative">
           <button
             type="button"
             onClick={() => togglePanel("notifications")}
             aria-label="Notifications"
             aria-expanded={activePanel === "notifications"}
-            className={`relative flex h-11 w-11 items-center justify-center rounded-xl transition-all ${
+            className={`relative flex h-10 w-10 items-center justify-center rounded-xl transition ${
               activePanel === "notifications"
                 ? "bg-soft-mint text-primary"
                 : "bg-soft-mint/70 text-primary hover:bg-soft-mint"
@@ -75,19 +138,18 @@ function Header() {
               fill="none"
               stroke="currentColor"
               strokeWidth="1.8"
-              className="h-[23px] w-[23px]"
+              className="h-[22px] w-[22px]"
             >
               <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
               <path d="M10 21h4" />
             </svg>
 
-            {/* Notification Indicator */}
             <span className="absolute right-1 top-1 h-3 w-3 rounded-full border-2 border-surface bg-accent" />
           </button>
 
           {/* Notifications Dropdown */}
           {activePanel === "notifications" && (
-            <div className="absolute right-0 top-full mt-3 w-[320px] overflow-hidden rounded-2xl border border-border bg-surface shadow-xl">
+            <div className="absolute right-0 top-full mt-3 w-[300px] max-w-[calc(100vw-24px)] overflow-hidden rounded-2xl border border-border bg-surface shadow-xl">
               <div className="flex items-center justify-between border-b border-border px-4 py-4">
                 <h3 className="text-sm font-semibold text-text-primary">
                   Notifications
@@ -97,7 +159,7 @@ function Header() {
                   type="button"
                   onClick={() => setActivePanel(null)}
                   aria-label="Close notifications"
-                  className="text-xl leading-none text-text-muted transition hover:text-primary"
+                  className="text-xl text-text-muted hover:text-primary"
                 >
                   ×
                 </button>
@@ -121,7 +183,7 @@ function Header() {
                   You're all caught up!
                 </p>
 
-                <p className="mt-1 text-xs text-text-secondary">
+                <p className="mt-1 text-center text-xs text-text-secondary">
                   No new notifications right now.
                 </p>
               </div>
@@ -130,27 +192,22 @@ function Header() {
         </div>
 
         {/* Divider */}
-        <div className="h-9 w-px bg-[#DCE7E8]" />
+        <div className="hidden h-9 w-px bg-[#DCE7E8] sm:block" />
 
-        {/* =================================
-            USER PROFILE
-        ================================== */}
-
+        {/* User Profile */}
         <div className="relative">
           <button
             type="button"
             onClick={() => togglePanel("profile")}
             aria-label="User profile"
             aria-expanded={activePanel === "profile"}
-            className="flex items-center gap-3 rounded-xl transition hover:bg-soft-mint/60"
+            className="flex items-center gap-2 rounded-xl transition hover:bg-soft-mint/60 sm:gap-3"
           >
-            {/* Avatar */}
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white ring-2 ring-soft-mint">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white ring-2 ring-soft-mint">
               {avatarInitials}
             </div>
 
-            {/* User Name */}
-            <div className="hidden max-w-[150px] text-left sm:block">
+            <div className="hidden max-w-[150px] text-left lg:block">
               <p className="truncate text-[13px] font-semibold text-text-primary">
                 {userName}
               </p>
@@ -158,13 +215,12 @@ function Header() {
               <p className="mt-0.5 text-[11px] text-text-muted">Account</p>
             </div>
 
-            {/* Dropdown Arrow */}
             <svg
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="1.8"
-              className={`h-4 w-4 text-text-secondary transition-transform ${
+              className={`hidden h-4 w-4 text-text-secondary transition-transform sm:block ${
                 activePanel === "profile" ? "rotate-180" : ""
               }`}
             >
@@ -174,8 +230,7 @@ function Header() {
 
           {/* Profile Dropdown */}
           {activePanel === "profile" && (
-            <div className="absolute right-0 top-full mt-3 w-[280px] overflow-hidden rounded-2xl border border-border bg-surface shadow-xl">
-              {/* Profile Information */}
+            <div className="absolute right-0 top-full mt-3 w-[280px] max-w-[calc(100vw-24px)] overflow-hidden rounded-2xl border border-border bg-surface shadow-xl">
               <div className="border-b border-border p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
@@ -194,7 +249,6 @@ function Header() {
                 </div>
               </div>
 
-              {/* Account Details */}
               <div className="p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">
                   Account
@@ -209,7 +263,6 @@ function Header() {
                 </p>
               </div>
 
-              {/* Close Dropdown */}
               <div className="border-t border-border p-3">
                 <button
                   type="button"
@@ -223,6 +276,41 @@ function Header() {
           )}
         </div>
       </div>
+
+      {/* Mobile Search Dropdown */}
+      {isMobileSearchOpen && (
+        <div className="absolute left-3 right-3 top-full z-40 mt-2 md:hidden">
+          <div className="flex h-[46px] items-center gap-3 rounded-xl border border-border bg-surface px-4 shadow-lg focus-within:border-primary-action focus-within:ring-2 focus-within:ring-primary/10">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-5 w-5 shrink-0 text-text-secondary"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m16 16 4 4" />
+            </svg>
+
+            <input
+              type="search"
+              autoFocus
+              placeholder="Search workspaces, tasks, or people..."
+              aria-label="Search workspaces, tasks, or people"
+              className="w-full bg-transparent text-sm text-text-primary outline-none placeholder:text-text-muted"
+            />
+
+            <button
+              type="button"
+              onClick={() => setIsMobileSearchOpen(false)}
+              aria-label="Close search"
+              className="shrink-0 text-lg text-text-muted hover:text-primary"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
