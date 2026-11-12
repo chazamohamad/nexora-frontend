@@ -22,6 +22,17 @@ function ComingSoonPage({ title }: ComingSoonPageProps) {
   );
 }
 
+function NotFound() {
+  return (
+    <div className="px-6 py-8 lg:px-8">
+      <h1 className="text-2xl font-bold text-text-primary">Page Not Found</h1>
+      <p className="mt-2 text-sm text-text-secondary">
+        The page you are looking for does not exist.
+      </p>
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -64,11 +75,11 @@ function App() {
               path="documentation"
               element={<ComingSoonPage title="Documentation" />}
             />
+
+            {/* Unknown Routes */}
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Route>
-
-        {/* Unknown Routes */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
